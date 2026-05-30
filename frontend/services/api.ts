@@ -1,8 +1,8 @@
 import axios from "axios";
-import { HealthStatus, ModelInfo, SignalsResponse } from "../types/types";
+import { HealthStatus, ModelInfo, SignalsResponse, MLflowStats } from "../types/types";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: "/api",
 });
 
 export const fetchTopSignals = async (): Promise<SignalsResponse | { error: string }> => {
@@ -23,7 +23,6 @@ export const fetchModelInfo = async (): Promise<ModelInfo> => {
   const response = await API.get("/model-info");
   return response.data;
 };
-
 
 export const fetchMLflowStats = async (): Promise<MLflowStats | { error: string }> => {
   try {

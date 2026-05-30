@@ -39,4 +39,5 @@ export interface MLflowStats {
   metrics: Record<string, number>;
   params: Record<string, string>;
   feature_importance: { feature: string; importance: number }[];
+  [key: string]: any;
 }

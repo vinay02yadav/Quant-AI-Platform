@@ -1,0 +1,24 @@
+# --- Security & Secrets (CRITICAL) ---
+.env
+.env.*
+*.env
+kafka-key.pem
+
+# --- Virtual Environments ---
+venv/
+backend/venv/
+
+# --- Node/Next.js ---
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# --- MLflow Local Data & Models ---
+mlflow.db
+mlartifacts/
+*.pkl
+
+# --- Python Caches & OS ---
+__pycache__/
+*.pyc
+.DS_Store

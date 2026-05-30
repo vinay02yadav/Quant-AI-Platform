@@ -1,0 +1,61 @@
+# GCP Docker Compose Configuration
+# Boots FastAPI, MLflow, Consumer, and Producer (on GCP)
+
+version: '3.8'
+
+services:
+  # FastAPI service
+  fastapi:
+    image: fastapi-quant
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - postgres
+
+  # MLflow service
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    ports:
+      - "5000:5000"
+    command: mlflow server --host 0.0.0.0
+
+  # Kafka Consumer
+  consumer:
+    image: kafka-consumer-quant
+    environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      - kafka
+
+  # Kafka Producer
+  producer:
+    image: kafka-producer-quant
+    environment:
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+    depends_on:
+      - kafka
+
+  # PostgreSQL
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_INTER_BROKER_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+
+volumes:
+  postgres_data:

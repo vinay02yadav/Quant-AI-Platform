@@ -32,3 +32,13 @@ export const fetchMLflowStats = async (): Promise<MLflowStats | { error: string 
     return { error: error.message || "Failed to fetch MLflow stats" };
   }
 };
+
+
+export const fetchStrategyPerformance = async (): Promise<any[] | { error: string }> => {
+  try {
+    const response = await API.get("/strategy-performance");
+    return response.data;
+  } catch (error: any) {
+    return { error: error.message || "Failed to fetch strategy performance" };
+  }
+};

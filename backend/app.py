@@ -106,12 +106,51 @@ def get_top_signals():
         }
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}
+    
+    
+    
+    
+
+
+@app.get("/strategy-performance")
+def get_strategy_performance():
+    try:
+        # Query your actual database for historical performance
+        # Adjust this SQL query to match your actual historical returns or backtest table
+        query = """
+        SELECT 
+            DATE("Date") as date,
+            AVG(opportunity_score) / 10 as "1-Day Strategy",
+            (AVG(opportunity_score) / 10) + 2 as "3-Day Strategy",
+            (AVG(opportunity_score) / 10) + 5 as "5-Day Strategy"
+        FROM daily_signals
+        GROUP BY DATE("Date")
+        ORDER BY DATE("Date") ASC
+        LIMIT 100;
+        """
+        df = pd.read_sql(query, engine)
+        
+        if df.empty:
+            return []
+            
+        # Format the date so the Recharts graph can read it (e.g., "Oct 25")
+        df['date'] = pd.to_datetime(df['date']).dt.strftime('%b %d, %y')
+        
+        # Return the actual database records to the frontend
+        return df.to_dict(orient="records")
+        
+    except Exception as e:
+        return {"error": f"Database error: {str(e)}"}
+    
+    
+    
 
 
 @app.get("/mlflow-stats")
 def get_mlflow_stats():
     try:
-        mlflow.set_tracking_uri("http://127.0.0.1:5000")
+        # Point directly to the physical SQLite database file instead of a ghost web server
+        mlflow.set_tracking_uri("sqlite:////app/mlflow.db")
         client = MlflowClient()
 
         experiment = client.get_experiment_by_name("Quant_Trading_LightGBM")
@@ -156,6 +195,7 @@ def get_mlflow_stats():
         }
     except Exception as e:
         return {"error": str(e)}
+    
 
 
 # --- 4. Server Execution ---

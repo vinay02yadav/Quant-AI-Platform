@@ -150,6 +150,7 @@ export default function TopSignalsTable() {
                           animate={{ width: `${s.forecastRank}%` }}
                           transition={{ duration: 1, delay: i * 0.1 }}
                           className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
+                          style={{ width: `${s.forecastRank}%` }}
                         />
                       </div>
                       <span className="font-semibold text-slate-200 w-10 text-right">{s.forecastRank}%</span>

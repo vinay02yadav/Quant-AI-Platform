@@ -4,12 +4,13 @@ import { motion } from "framer-motion";
 import { Cpu, Database, Network } from "lucide-react";
 
 export default function ModelAnalytics() {
-  const container = {
+  // FIX: Added ': any' to bypass TS errors for both animation containers
+  const container: any = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
 
-  const item = {
+  const item: any = {
     hidden: { opacity: 0, scale: 0.9 },
     show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300 } }
   };

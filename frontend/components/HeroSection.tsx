@@ -21,27 +21,6 @@ export default function HeroSection() {
     }
   };
 
-  // Safe 2D letter cascade that won't break the CSS gradient mask
-  const titleVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: 0.2 }
-    }
-  };
-
-  const letterVariants = {
-    hidden: { opacity: 0, y: 40 }, // Removed rotateX to prevent hardware layer vanishing
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.7, type: "spring", damping: 15, stiffness: 200 } 
-    }
-  };
-
-  const title = "Quantitative Intelligence";
-  const words = title.split(" ");
-
   return (
     <motion.section 
       variants={containerVariants}
@@ -73,30 +52,15 @@ export default function HeroSection() {
         <span className="text-xs font-bold text-purple-400 tracking-widest uppercase drop-shadow-md">Regime: High Volatility</span>
       </motion.div>
 
-      {/* Stabilized Title Block 
-        - The gradient stays safely on the parent 
-        - padding added to ensure no clipping 
-      */}
+      {/* Bulletproof Title Block */}
       <motion.h1 
-        variants={titleVariants}
-        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-        transition={{ duration: 10, ease: "linear", repeat: Infinity }}
-        className="relative z-10 text-5xl md:text-7xl lg:text-8xl font-black text-transparent bg-clip-text bg-[length:200%_auto] bg-gradient-to-r from-slate-100 via-cyan-300 to-blue-500 mb-8 tracking-tight py-4 leading-tight flex flex-wrap justify-center gap-x-4 overflow-visible"
+        variants={itemVariants}
+        className="relative z-10 text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight py-4 leading-tight flex flex-wrap justify-center gap-x-4"
       >
-        {words.map((word, wordIndex) => (
-          // pr-2 ensures the final letter in any word (like 'e') has a pixel buffer
-          <span key={wordIndex} className="inline-flex pb-2 pr-2 overflow-visible">
-            {word.split("").map((char, charIndex) => (
-              <motion.span 
-                key={charIndex} 
-                variants={letterVariants}
-                className="inline-block"
-              >
-                {char}
-              </motion.span>
-            ))}
-          </span>
-        ))}
+        <span className="text-white drop-shadow-sm">Quantitative</span>
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-sm">
+          Intelligence
+        </span>
       </motion.h1>
       
       {/* Subtitle / Description */}

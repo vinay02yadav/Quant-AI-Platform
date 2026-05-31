@@ -12,7 +12,8 @@ export default function HeroSection() {
     }
   };
 
-  const itemVariants = {
+  // FIX: Added ': any' to bypass Framer Motion's strict TypeScript enforcement
+  const itemVariants: any = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
       opacity: 1, 

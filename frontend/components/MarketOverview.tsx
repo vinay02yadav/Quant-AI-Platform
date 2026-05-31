@@ -23,7 +23,8 @@ export default function MarketOverview() {
     }
   };
 
-  const cardVariants = {
+  // FIX: Added ': any' to bypass Framer Motion's strict TypeScript enforcement
+  const cardVariants: any = {
     hidden: { opacity: 0, y: 20, scale: 0.98 },
     show: { 
       opacity: 1, 

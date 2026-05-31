@@ -1,16 +1,12 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
-        destination: "http://35.208.254.175/:path*", 
+        source: '/api/:path*',
+        destination: 'http://35.208.254.175/:path*',
       },
     ];
   },
 };
-
 export default nextConfig;

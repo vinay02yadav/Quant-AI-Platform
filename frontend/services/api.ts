@@ -2,7 +2,7 @@ import axios from "axios";
 import { HealthStatus, ModelInfo, SignalsResponse, MLflowStats } from "../types/types";
 
 const API = axios.create({
-  baseURL: "http://35.208.254.175",
+  baseURL: "/api",
 });
 
 export const fetchTopSignals = async (): Promise<SignalsResponse | { error: string }> => {

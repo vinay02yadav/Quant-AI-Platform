@@ -1,255 +1,162 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1520" viewBox="0 0 2200 1520" role="img" aria-labelledby="title desc">
-  <title id="title">Quant Pipeline Architecture Flowchart</title>
-  <desc id="desc">Flowchart showing Yahoo Finance data moving through a GCP producer, AWS EC2 Kafka, a GCP consumer, Hugging Face enrichment, AWS RDS PostgreSQL tables, feature engineering, LightGBM inference, FastAPI, and the Next.js dashboard.</desc>
-
+<svg width="1800" height="900" viewBox="0 0 1800 900" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#081426"/>
-      <stop offset="100%" stop-color="#102642"/>
-    </linearGradient>
-    <linearGradient id="headerGlow" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#56b4ff"/>
-      <stop offset="50%" stop-color="#9be7ff"/>
-      <stop offset="100%" stop-color="#8dd7b5"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#020a14" flood-opacity="0.42"/>
-    </filter>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L12,6 L0,12 z" fill="#a9dafb"/>
-    </marker>
-    <marker id="arrowManual" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L12,6 L0,12 z" fill="#ffc96b"/>
-    </marker>
     <style>
-      .title { font-family: Inter, Arial, sans-serif; font-size: 52px; font-weight: 800; fill: #f2f8ff; letter-spacing: 0.3px; }
-      .subtitle { font-family: Inter, Arial, sans-serif; font-size: 23px; font-weight: 500; fill: #a7bdd5; }
-      .zone-title { font-family: Inter, Arial, sans-serif; font-size: 27px; font-weight: 800; fill: #f2f8ff; letter-spacing: 0.6px; }
-      .zone-subtitle { font-family: Inter, Arial, sans-serif; font-size: 17px; font-weight: 500; fill: #9cb3ca; }
-      .node-title { font-family: Inter, Arial, sans-serif; font-size: 23px; font-weight: 800; fill: #f5f9ff; }
-      .node-text { font-family: Inter, Arial, sans-serif; font-size: 17px; font-weight: 500; fill: #c3d2e3; }
-      .node-small { font-family: Inter, Arial, sans-serif; font-size: 15px; font-weight: 600; fill: #9fb2c8; }
-      .badge { font-family: Inter, Arial, sans-serif; font-size: 15px; font-weight: 800; fill: #071523; }
-      .arrow-label { font-family: Inter, Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #bdd6eb; }
-      .arrow-label-manual { font-family: Inter, Arial, sans-serif; font-size: 16px; font-weight: 800; fill: #ffd483; }
-      .footer-title { font-family: Inter, Arial, sans-serif; font-size: 18px; font-weight: 800; fill: #edf7ff; }
-      .footer-text { font-family: Inter, Arial, sans-serif; font-size: 16px; font-weight: 500; fill: #adc2d8; }
-      .flow { fill: none; stroke: #a9dafb; stroke-width: 4; marker-end: url(#arrow); }
-      .flow-thin { fill: none; stroke: #a9dafb; stroke-width: 3; marker-end: url(#arrow); }
-      .flow-manual { fill: none; stroke: #ffc96b; stroke-width: 4; stroke-dasharray: 14 10; marker-end: url(#arrowManual); }
-      .flow-return { fill: none; stroke: #8dd7b5; stroke-width: 3; marker-end: url(#arrow); }
+      .bg { fill: #f8fafc; }
+      .header { fill: #0f172a; }
+      .header-line { stroke: #38bdf8; stroke-width: 3; opacity: 0.85; }
+      .title { fill: #ffffff; font: 700 42px Arial, Helvetica, sans-serif; }
+      .subtitle { fill: #cbd5e1; font: 400 20px Arial, Helvetica, sans-serif; }
+      .section { fill: #334155; font: 700 14px Arial, Helvetica, sans-serif; letter-spacing: 0.6px; }
+      .card-title { fill: #0f172a; font: 700 23px Arial, Helvetica, sans-serif; }
+      .card-text { fill: #334155; font: 400 16.5px Arial, Helvetica, sans-serif; }
+      .chip-text { fill: #ffffff; font: 700 13px Arial, Helvetica, sans-serif; }
+      .time-text { fill: #ffffff; font: 700 14px Arial, Helvetica, sans-serif; }
+      .step { fill: #ffffff; font: 700 18px Arial, Helvetica, sans-serif; }
+      .arrow-label { fill: #64748b; font: 700 13px Arial, Helvetica, sans-serif; }
+      .aws { fill: #fff7ed; stroke: #f97316; stroke-width: 2.4; }
+      .gcp { fill: #eff6ff; stroke: #2563eb; stroke-width: 2.4; }
+      .kafka { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 2.4; }
+      .ml { fill: #fff1f2; stroke: #e11d48; stroke-width: 2.4; }
+      .db { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2.4; }
+      .ui { fill: #faf5ff; stroke: #9333ea; stroke-width: 2.4; }
+      .aws-fill { fill: #ea580c; }
+      .gcp-fill { fill: #2563eb; }
+      .kafka-fill { fill: #7c3aed; }
+      .ml-fill { fill: #e11d48; }
+      .db-fill { fill: #16a34a; }
+      .ui-fill { fill: #9333ea; }
+      .arrow { stroke: #0891b2; stroke-width: 4.5; fill: none; marker-end: url(#arrow); }
+      .arrow-soft { stroke: #94a3b8; stroke-width: 3.5; fill: none; marker-end: url(#arrowSoft); stroke-dasharray: 9 9; }
+      .divider { stroke: #cbd5e1; stroke-width: 1.2; }
+      .shadow { filter: url(#shadow); }
     </style>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+      <path d="M2 2 L14 8 L2 14 Z" fill="#0891b2"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+      <path d="M2 2 L14 8 L2 14 Z" fill="#94a3b8"/>
+    </marker>
+    <filter id="shadow" x="-18%" y="-20%" width="136%" height="145%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.13"/>
+    </filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" stroke="#e2e8f0" stroke-width="1" opacity="0.32"/>
+    </pattern>
   </defs>
 
-  <rect width="2200" height="1520" fill="url(#background)"/>
-  <circle cx="1900" cy="90" r="260" fill="#17395d" opacity="0.24"/>
-  <circle cx="180" cy="1430" r="310" fill="#16465a" opacity="0.18"/>
+  <rect class="bg" width="1800" height="900"/>
+  <rect width="1800" height="900" fill="url(#grid)"/>
 
-  <text x="85" y="88" class="title">Quant Pipeline: Kafka-to-Prediction Architecture</text>
-  <rect x="88" y="112" width="1190" height="5" rx="2.5" fill="url(#headerGlow)"/>
-  <text x="88" y="155" class="subtitle">Verified current flow, cloud placement, and run order</text>
+  <rect x="70" y="38" width="1660" height="132" rx="28" class="header"/>
+  <line x1="112" y1="168" x2="1690" y2="168" class="header-line"/>
+  <text x="112" y="90" class="title">Quant AI Platform - Current Production Architecture</text>
+  <text x="112" y="128" class="subtitle">GCP only listens first at 9:29 PM. AWS independently publishes at 9:30 PM. GCP processes the stream and writes results back to AWS PostgreSQL.</text>
 
-  <!-- Zone backgrounds -->
-  <rect x="60" y="205" width="420" height="1070" rx="28" fill="#112b45" stroke="#3976a7" stroke-width="2"/>
-  <rect x="520" y="205" width="710" height="1070" rx="28" fill="#122e45" stroke="#3a8caa" stroke-width="2"/>
-  <rect x="1270" y="205" width="870" height="1070" rx="28" fill="#2b2b35" stroke="#d99a3f" stroke-width="2"/>
+  <text x="100" y="214" class="section">SCHEDULED TRIGGERS</text>
+  <line x1="100" y1="228" x2="1650" y2="228" class="divider"/>
 
-  <!-- Zone headings -->
-  <rect x="84" y="232" width="372" height="76" rx="18" fill="#183b5d"/>
-  <text x="110" y="266" class="zone-title">External Services</text>
-  <text x="110" y="291" class="zone-subtitle">Third-party APIs and frontend host</text>
+  <text x="100" y="429" class="section">STREAMING AND PROCESSING</text>
+  <line x1="100" y1="443" x2="1650" y2="443" class="divider"/>
 
-  <rect x="544" y="232" width="662" height="76" rx="18" fill="#17405a"/>
-  <text x="570" y="266" class="zone-title">GCP VM Workloads</text>
-  <text x="570" y="291" class="zone-subtitle">Docker services intended to run on the Google Cloud VM</text>
+  <text x="100" y="644" class="section">MODEL, STORAGE, AND DASHBOARD</text>
+  <line x1="100" y1="658" x2="1650" y2="658" class="divider"/>
 
-  <rect x="1294" y="232" width="822" height="76" rx="18" fill="#433521"/>
-  <text x="1320" y="266" class="zone-title">AWS Infrastructure</text>
-  <text x="1320" y="291" class="zone-subtitle">EC2 Kafka broker and RDS PostgreSQL database</text>
+  <!-- Row 1 -->
+  <rect x="100" y="245" width="430" height="145" rx="20" class="gcp shadow"/>
+  <rect x="130" y="268" width="44" height="34" rx="17" class="gcp-fill"/>
+  <text x="142" y="291" class="step">1</text>
+  <rect x="188" y="268" width="96" height="34" rx="17" class="gcp-fill"/>
+  <text x="206" y="291" class="time-text">9:29 PM</text>
+  <rect x="130" y="316" width="70" height="25" rx="12.5" class="gcp-fill"/>
+  <text x="148" y="334" class="chip-text">GCP</text>
+  <text x="218" y="337" class="card-title">Cron Starts Listener</text>
+  <text x="130" y="365" class="card-text">Starts a listen-only Kafka consumer and</text>
+  <text x="130" y="386" class="card-text">waits before any AWS data arrives.</text>
 
-  <!-- External nodes -->
-  <g filter="url(#shadow)">
-    <rect x="102" y="375" width="336" height="150" rx="22" fill="#163c61" stroke="#65b7ed" stroke-width="2"/>
-    <rect x="124" y="395" width="72" height="30" rx="15" fill="#72c6f5"/>
-    <text x="160" y="416" text-anchor="middle" class="badge">INPUT</text>
-    <text x="124" y="458" class="node-title">Yahoo Finance APIs</text>
-    <text x="124" y="487" class="node-text">Market prices and RSS news</text>
-    <text x="124" y="512" class="node-small">External data source</text>
-  </g>
+  <rect x="665" y="245" width="430" height="145" rx="20" class="aws shadow"/>
+  <rect x="695" y="268" width="44" height="34" rx="17" class="aws-fill"/>
+  <text x="707" y="291" class="step">2</text>
+  <rect x="753" y="268" width="96" height="34" rx="17" class="aws-fill"/>
+  <text x="771" y="291" class="time-text">9:30 PM</text>
+  <rect x="695" y="316" width="70" height="25" rx="12.5" class="aws-fill"/>
+  <text x="715" y="334" class="chip-text">AWS</text>
+  <text x="783" y="337" class="card-title">Cron Starts Producer</text>
+  <text x="695" y="365" class="card-text">Runs independently on the AWS server.</text>
+  <text x="695" y="386" class="card-text">It is not triggered by GCP.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="102" y="645" width="336" height="170" rx="22" fill="#173c58" stroke="#67c4c5" stroke-width="2"/>
-    <rect x="124" y="665" width="90" height="30" rx="15" fill="#8dd7b5"/>
-    <text x="169" y="686" text-anchor="middle" class="badge">NLP API</text>
-    <text x="124" y="728" class="node-title">Hugging Face APIs</text>
-    <text x="124" y="757" class="node-text">FinBERT sentiment</text>
-    <text x="124" y="782" class="node-text">Qwen news summaries</text>
-  </g>
+  <rect x="1230" y="245" width="430" height="145" rx="20" class="aws shadow"/>
+  <rect x="1260" y="268" width="44" height="34" rx="17" class="aws-fill"/>
+  <text x="1272" y="291" class="step">3</text>
+  <rect x="1260" y="316" width="70" height="25" rx="12.5" class="aws-fill"/>
+  <text x="1280" y="334" class="chip-text">AWS</text>
+  <text x="1348" y="337" class="card-title">Fetch + Produce Data</text>
+  <text x="1260" y="365" class="card-text">Fetches following-session stocks, macro</text>
+  <text x="1260" y="386" class="card-text">data, and market news headlines.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="102" y="1058" width="336" height="150" rx="22" fill="#183755" stroke="#88b9e2" stroke-width="2"/>
-    <rect x="124" y="1078" width="78" height="30" rx="15" fill="#9ecdf0"/>
-    <text x="163" y="1099" text-anchor="middle" class="badge">UI</text>
-    <text x="124" y="1141" class="node-title">Next.js Dashboard</text>
-    <text x="124" y="1170" class="node-text">frontend/</text>
-    <text x="124" y="1195" class="node-small">Presentation layer</text>
-  </g>
+  <!-- Row 2 -->
+  <rect x="1230" y="460" width="430" height="145" rx="20" class="kafka shadow"/>
+  <rect x="1260" y="483" width="44" height="34" rx="17" class="kafka-fill"/>
+  <text x="1272" y="506" class="step">4</text>
+  <rect x="1260" y="531" width="85" height="25" rx="12.5" class="kafka-fill"/>
+  <text x="1278" y="549" class="chip-text">KAFKA</text>
+  <text x="1363" y="552" class="card-title">market_data_stream</text>
+  <text x="1260" y="580" class="card-text">AWS publishes records to the Kafka topic.</text>
+  <text x="1260" y="601" class="card-text">Kafka buffers the stream for GCP.</text>
 
-  <!-- GCP nodes -->
-  <g filter="url(#shadow)">
-    <rect x="582" y="375" width="584" height="150" rx="22" fill="#16435b" stroke="#55bed5" stroke-width="2"/>
-    <circle cx="622" cy="415" r="21" fill="#67d0e5"/>
-    <text x="622" y="422" text-anchor="middle" class="badge">1</text>
-    <text x="660" y="421" class="node-title">streaming/kafka_producer.py</text>
-    <text x="612" y="461" class="node-text">Fetches Yahoo Finance rows and publishes JSON messages</text>
-    <text x="612" y="490" class="node-small">Intended location: GCP container or manually started process</text>
-  </g>
+  <rect x="665" y="460" width="430" height="145" rx="20" class="gcp shadow"/>
+  <rect x="695" y="483" width="44" height="34" rx="17" class="gcp-fill"/>
+  <text x="707" y="506" class="step">5</text>
+  <rect x="695" y="531" width="70" height="25" rx="12.5" class="gcp-fill"/>
+  <text x="713" y="549" class="chip-text">GCP</text>
+  <text x="783" y="552" class="card-title">Consume + Enrich</text>
+  <text x="695" y="580" class="card-text">Pulls Kafka records and adds AI sentiment</text>
+  <text x="695" y="601" class="card-text">signals plus short news summaries.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="582" y="645" width="584" height="170" rx="22" fill="#16435b" stroke="#55bed5" stroke-width="2"/>
-    <circle cx="622" cy="685" r="21" fill="#67d0e5"/>
-    <text x="622" y="692" text-anchor="middle" class="badge">3</text>
-    <text x="660" y="691" class="node-title">streaming/kafka_consumer.py</text>
-    <text x="612" y="731" class="node-text">Consumes Kafka messages and enriches news fields</text>
-    <text x="612" y="760" class="node-text">Appends database batches of 50 rows</text>
-    <text x="612" y="789" class="node-small">Current runtime state: consumer is offline</text>
-  </g>
+  <rect x="100" y="460" width="430" height="145" rx="20" class="gcp shadow"/>
+  <rect x="130" y="483" width="44" height="34" rx="17" class="gcp-fill"/>
+  <text x="142" y="506" class="step">6</text>
+  <rect x="130" y="531" width="70" height="25" rx="12.5" class="gcp-fill"/>
+  <text x="148" y="549" class="chip-text">GCP</text>
+  <text x="218" y="552" class="card-title">Feature Engineering</text>
+  <text x="130" y="580" class="card-text">Builds technical, macro, rolling, regime,</text>
+  <text x="130" y="601" class="card-text">and sentiment features for inference.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="582" y="876" width="584" height="156" rx="22" fill="#554523" stroke="#ffc96b" stroke-width="2"/>
-    <circle cx="622" cy="916" r="21" fill="#ffc96b"/>
-    <text x="622" y="923" text-anchor="middle" class="badge">6</text>
-    <text x="660" y="922" class="node-title">ml_engine/feature_engineer.py</text>
-    <text x="612" y="962" class="node-text">Calculates technical, macro, and sentiment features</text>
-    <text x="612" y="991" class="node-small">Manual or external scheduling required</text>
-  </g>
+  <!-- Row 3 -->
+  <rect x="100" y="675" width="430" height="145" rx="20" class="ml shadow"/>
+  <rect x="130" y="698" width="44" height="34" rx="17" class="ml-fill"/>
+  <text x="142" y="721" class="step">7</text>
+  <rect x="130" y="746" width="70" height="25" rx="12.5" class="ml-fill"/>
+  <text x="151" y="764" class="chip-text">ML</text>
+  <text x="218" y="767" class="card-title">LightGBM Inference</text>
+  <text x="130" y="795" class="card-text">Predicts final market signals for 1-day,</text>
+  <text x="130" y="816" class="card-text">3-day, and 5-day horizons.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="582" y="1094" width="366" height="142" rx="22" fill="#554523" stroke="#ffc96b" stroke-width="2"/>
-    <circle cx="622" cy="1134" r="21" fill="#ffc96b"/>
-    <text x="622" y="1141" text-anchor="middle" class="badge">8</text>
-    <text x="660" y="1140" class="node-title">ml_engine/run_inference.py</text>
-    <text x="612" y="1179" class="node-text">Runs LightGBM predictions</text>
-    <text x="612" y="1207" class="node-small">Manual or external scheduling required</text>
-  </g>
+  <rect x="665" y="675" width="430" height="145" rx="20" class="db shadow"/>
+  <rect x="695" y="698" width="44" height="34" rx="17" class="db-fill"/>
+  <text x="707" y="721" class="step">8</text>
+  <rect x="695" y="746" width="70" height="25" rx="12.5" class="db-fill"/>
+  <text x="713" y="764" class="chip-text">AWS</text>
+  <text x="783" y="767" class="card-title">PostgreSQL</text>
+  <text x="695" y="795" class="card-text">Stores raw_market_data, deployment_dataset,</text>
+  <text x="695" y="816" class="card-text">and daily_signals for downstream reads.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="976" y="1094" width="190" height="142" rx="22" fill="#1d4c5c" stroke="#8dd7b5" stroke-width="2"/>
-    <text x="1000" y="1133" class="node-title">Model File</text>
-    <text x="1000" y="1165" class="node-text">LightGBM</text>
-    <text x="1000" y="1192" class="node-small">multi_horizon_</text>
-    <text x="1000" y="1214" class="node-small">lgb.pkl</text>
-  </g>
+  <rect x="1230" y="675" width="430" height="145" rx="20" class="ui shadow"/>
+  <rect x="1260" y="698" width="44" height="34" rx="17" class="ui-fill"/>
+  <text x="1272" y="721" class="step">9</text>
+  <rect x="1260" y="746" width="70" height="25" rx="12.5" class="ui-fill"/>
+  <text x="1281" y="764" class="chip-text">UI</text>
+  <text x="1348" y="767" class="card-title">Frontend Dashboard</text>
+  <text x="1260" y="795" class="card-text">Reads the latest saved PostgreSQL signals</text>
+  <text x="1260" y="816" class="card-text">through the app/API layer.</text>
 
-  <g filter="url(#shadow)">
-    <rect x="582" y="1304" width="584" height="140" rx="22" fill="#16435b" stroke="#55bed5" stroke-width="2"/>
-    <circle cx="622" cy="1344" r="21" fill="#67d0e5"/>
-    <text x="622" y="1351" text-anchor="middle" class="badge">10</text>
-    <text x="660" y="1350" class="node-title">backend/app.py</text>
-    <text x="612" y="1390" class="node-text">FastAPI reads signals and serves REST endpoints</text>
-    <text x="612" y="1418" class="node-small">Intended location: GCP Docker container</text>
-  </g>
-
-  <!-- AWS nodes -->
-  <g filter="url(#shadow)">
-    <rect x="1340" y="375" width="728" height="150" rx="22" fill="#4c3b24" stroke="#ffbe5c" stroke-width="2"/>
-    <circle cx="1380" cy="415" r="21" fill="#ffbd59"/>
-    <text x="1380" y="422" text-anchor="middle" class="badge">2</text>
-    <text x="1418" y="421" class="node-title">AWS EC2: Apache Kafka Broker</text>
-    <text x="1370" y="461" class="node-text">Topic: market_data_stream</text>
-    <text x="1370" y="490" class="node-small">Queues JSON messages until a consumer reads them</text>
-  </g>
-
-  <rect x="1318" y="592" width="772" height="640" rx="24" fill="#352f29" stroke="#b88645" stroke-width="2" stroke-dasharray="8 6"/>
-  <text x="1350" y="630" class="zone-title">AWS RDS PostgreSQL</text>
-  <text x="1350" y="658" class="zone-subtitle">Database tables used by each pipeline stage</text>
-
-  <g filter="url(#shadow)">
-    <rect x="1350" y="698" width="708" height="132" rx="20" fill="#503f2b" stroke="#efb25e" stroke-width="2"/>
-    <circle cx="1390" cy="738" r="21" fill="#ffbd59"/>
-    <text x="1390" y="745" text-anchor="middle" class="badge">5</text>
-    <text x="1428" y="744" class="node-title">Table: raw_market_data</text>
-    <text x="1380" y="785" class="node-text">Enriched market rows written by kafka_consumer.py</text>
-    <text x="1380" y="811" class="node-small">Current verified rows: 10,700</text>
-  </g>
-
-  <g filter="url(#shadow)">
-    <rect x="1350" y="890" width="708" height="132" rx="20" fill="#503f2b" stroke="#efb25e" stroke-width="2"/>
-    <circle cx="1390" cy="930" r="21" fill="#ffbd59"/>
-    <text x="1390" y="937" text-anchor="middle" class="badge">7</text>
-    <text x="1428" y="936" class="node-title">Table: deployment_dataset</text>
-    <text x="1380" y="977" class="node-text">Engineered model features written by feature_engineer.py</text>
-    <text x="1380" y="1003" class="node-small">Read by run_inference.py</text>
-  </g>
-
-  <g filter="url(#shadow)">
-    <rect x="1350" y="1082" width="708" height="132" rx="20" fill="#503f2b" stroke="#efb25e" stroke-width="2"/>
-    <circle cx="1390" cy="1122" r="21" fill="#ffbd59"/>
-    <text x="1390" y="1129" text-anchor="middle" class="badge">9</text>
-    <text x="1428" y="1128" class="node-title">Table: daily_signals</text>
-    <text x="1380" y="1169" class="node-text">Latest model predictions written by run_inference.py</text>
-    <text x="1380" y="1195" class="node-small">Read by backend/app.py</text>
-  </g>
-
-  <!-- Arrows: data collection and Kafka -->
-  <path d="M438 450 L582 450" class="flow"/>
-  <text x="510" y="433" text-anchor="middle" class="arrow-label">Fetch</text>
-
-  <path d="M1166 450 L1340 450" class="flow"/>
-  <text x="1253" y="433" text-anchor="middle" class="arrow-label">Publish JSON</text>
-
-  <path d="M1704 525 L1704 565 Q1704 585 1684 585 L1262 585 Q1242 585 1242 605 L1242 730 Q1242 750 1222 750 L1166 750" class="flow"/>
-  <text x="1453" y="568" text-anchor="middle" class="arrow-label">Consume queued rows</text>
-
-  <!-- Consumer to NLP and back -->
-  <path d="M582 710 L438 710" class="flow-thin"/>
-  <text x="510" y="691" text-anchor="middle" class="arrow-label">Headlines</text>
-  <path d="M438 766 L582 766" class="flow-return"/>
-  <text x="510" y="794" text-anchor="middle" class="arrow-label">NLP results</text>
-
-  <!-- Consumer to raw DB -->
-  <path d="M1166 750 L1350 750" class="flow"/>
-  <text x="1258" y="731" text-anchor="middle" class="arrow-label">Append batches</text>
-
-  <!-- Raw DB to feature engineer (manual) -->
-  <path d="M1350 796 L1248 796 Q1228 796 1228 816 L1228 954 Q1228 974 1208 974 L1166 974" class="flow-manual"/>
-  <text x="1230" y="874" text-anchor="middle" class="arrow-label-manual" transform="rotate(-90 1230 874)">Manual start</text>
-
-  <!-- Feature engineer to deployment DB -->
-  <path d="M1166 954 L1350 954" class="flow"/>
-  <text x="1258" y="935" text-anchor="middle" class="arrow-label">Write features</text>
-
-  <!-- Deployment DB to inference (manual) -->
-  <path d="M1350 988 L1270 988 Q1250 988 1250 1008 L1250 1150 Q1250 1170 1230 1170 L948 1170" class="flow-manual"/>
-  <text x="1210" y="1150" text-anchor="end" class="arrow-label-manual">Manual start</text>
-
-  <!-- Model file to inference -->
-  <path d="M976 1148 L948 1148" class="flow-return"/>
-  <text x="962" y="1128" text-anchor="middle" class="arrow-label">Load</text>
-
-  <!-- inference to daily_signals -->
-  <path d="M948 1200 L1230 1200 Q1250 1200 1250 1180 L1250 1150 Q1250 1130 1270 1130 L1350 1130" class="flow"/>
-  <text x="1186" y="1230" text-anchor="middle" class="arrow-label">Write predictions</text>
-
-  <!-- Daily signals to FastAPI -->
-  <path d="M1704 1214 L1704 1374 Q1704 1394 1684 1394 L1166 1394" class="flow"/>
-  <text x="1450" y="1375" text-anchor="middle" class="arrow-label">SQL SELECT</text>
-
-  <!-- FastAPI to frontend -->
-  <path d="M582 1374 L486 1374 Q466 1374 466 1354 L466 1133 Q466 1113 446 1113 L438 1113" class="flow"/>
-  <text x="482" y="1258" text-anchor="middle" class="arrow-label" transform="rotate(-90 482 1258)">REST API</text>
-
-  <!-- Legend -->
-  <rect x="60" y="1304" width="420" height="140" rx="22" fill="#10273d" stroke="#3976a7" stroke-width="2"/>
-  <text x="88" y="1340" class="footer-title">Legend</text>
-  <line x1="90" y1="1374" x2="172" y2="1374" stroke="#a9dafb" stroke-width="4" marker-end="url(#arrow)"/>
-  <text x="196" y="1380" class="footer-text">Implemented data movement</text>
-  <line x1="90" y1="1410" x2="172" y2="1410" stroke="#ffc96b" stroke-width="4" stroke-dasharray="14 10" marker-end="url(#arrowManual)"/>
-  <text x="196" y="1416" class="footer-text">Needs manual run or scheduler</text>
-
-  <!-- Current state note -->
-  <rect x="1270" y="1304" width="870" height="140" rx="22" fill="#382d21" stroke="#d99a3f" stroke-width="2"/>
-  <text x="1302" y="1341" class="footer-title">Current Runtime Note</text>
-  <text x="1302" y="1376" class="footer-text">Kafka is genuinely in the ingestion path. The GCP consumer is currently offline,</text>
-  <text x="1302" y="1404" class="footer-text">leaving 4,108 Kafka records queued. Feature engineering and inference are not auto-scheduled.</text>
+  <!-- Flow arrows -->
+  <path d="M530 318 H665" class="arrow-soft"/>
+  <text x="555" y="304" class="arrow-label">one minute later</text>
+  <path d="M1095 318 H1230" class="arrow"/>
+  <path d="M1445 390 V460" class="arrow"/>
+  <path d="M1230 532.5 H1095" class="arrow"/>
+  <path d="M665 532.5 H530" class="arrow"/>
+  <path d="M315 605 V675" class="arrow"/>
+  <path d="M530 747.5 H665" class="arrow"/>
+  <path d="M1095 747.5 H1230" class="arrow"/>
 </svg>

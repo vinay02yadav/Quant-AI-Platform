@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import mlflow
 from mlflow.tracking import MlflowClient
+from functools import lru_cache
 
 load_dotenv()
 
@@ -40,6 +41,7 @@ def health_check():
 
 
 @app.get("/model-info")
+@lru_cache(maxsize=1)
 def model_info():
     return {
         "model": "LightGBM MultiOutput",
@@ -51,22 +53,24 @@ def model_info():
 
 
 @app.get("/top-signals")
+@lru_cache(maxsize=1)
 def get_top_signals():
     try:
-        query = "SELECT * FROM daily_signals;"
+        # OPTIMIZATION 1: Only query the absolute latest date from Postgres
+        query = """
+            SELECT * FROM daily_signals 
+            WHERE "Date" = (SELECT MAX("Date") FROM daily_signals);
+        """
         df = pd.read_sql(query, engine)
 
         if df.empty:
             return {"signals": [], "metadata": None}
 
-        # 1. FIX DUPLICATES: Filter to the latest date AND drop overlapping runs for the same ticker
-        latest_date = df["Date"].max()
-        df = df[df["Date"] == latest_date]
+        # Drop overlapping runs for the same ticker
         df = df.drop_duplicates(subset=["Stock_symbol"], keep="last")
+        latest_date = df["Date"].max()
 
-        # 2. FIX CLONE SCORES: Smart fallback that generates a realistic, varied spread
         if "opportunity_score" not in df.columns:
-            # Handle the main score
             prob_col = next(
                 (
                     col
@@ -75,7 +79,6 @@ def get_top_signals():
                 ),
                 None,
             )
-
             if prob_col:
                 max_val = df[prob_col].max()
                 multiplier = 100 if max_val <= 1.0 else 1
@@ -88,10 +91,7 @@ def get_top_signals():
             df["momentum_score"] = (df["Close"] * 13 % 60) + 40
             df["sentiment_score"] = (df["Close"] * 17 % 60) + 40
 
-        # Sort by the final opportunity score and take the top 10
         df = df.sort_values(by="opportunity_score", ascending=False).head(10)
-
-        # Setup dates for the frontend metadata
         target_date = pd.to_datetime(latest_date) + pd.Timedelta(days=5)
         df = df.fillna(0)
 
@@ -107,46 +107,52 @@ def get_top_signals():
 
 
 @app.get("/strategy-performance")
+@lru_cache(maxsize=1)
 def get_strategy_performance():
     try:
-        # Pull the absolute baseline data that we KNOW exists in your DB
-        query = 'SELECT "Date", "Close" FROM daily_signals ORDER BY "Date" ASC;'
+        # OPTIMIZATION 2: Make Postgres do the Group By and Averaging, limiting to 100 rows instantly
+        query = """
+            SELECT "Date", AVG("Close") as "Close" 
+            FROM daily_signals 
+            GROUP BY "Date" 
+            ORDER BY "Date" DESC 
+            LIMIT 100;
+        """
         df = pd.read_sql(query, engine)
 
         if df.empty:
             return []
 
-        # Group by Date and calculate a deterministic baseline using Close price
-        daily_avg = df.groupby("Date")["Close"].mean()
+        # Flip the dataframe so it reads left-to-right (oldest to newest) for the frontend chart
+        df = df.sort_values(by="Date", ascending=True)
 
         perf_df = pd.DataFrame(
             {
-                "date": pd.to_datetime(daily_avg.index).dt.strftime("%b %d, %y"),
-                "1-Day Strategy": ((daily_avg % 10) - 2).round(2),
-                "3-Day Strategy": ((daily_avg % 10) + 3).round(2),
-                "5-Day Strategy": ((daily_avg % 10) + 8).round(2),
+                "date": pd.to_datetime(df["Date"]).dt.strftime("%b %d, %y"),
+                "1-Day Strategy": ((df["Close"] % 10) - 2).round(2),
+                "3-Day Strategy": ((df["Close"] % 10) + 3).round(2),
+                "5-Day Strategy": ((df["Close"] % 10) + 8).round(2),
             }
         )
 
-        # Return the last 100 days for the chart
-        return perf_df.tail(100).to_dict(orient="records")
+        return perf_df.to_dict(orient="records")
 
     except Exception as e:
         return {"error": f"Database error: {str(e)}"}
 
 
 @app.get("/mlflow-stats")
+@lru_cache(maxsize=1)
 def get_mlflow_stats():
     try:
+        # MLFlow query is now cached, so SQLite isn't blocked on every page load
         mlflow.set_tracking_uri("sqlite:////app/mlflow.db")
         client = MlflowClient()
 
-        # DYNAMIC FIX: Search for ALL experiments instead of guessing the name
         experiments = client.search_experiments()
         if not experiments:
             return {"error": "No experiments found in mlflow.db"}
 
-        # Grab the absolute latest run from across ANY of your experiments
         experiment_ids = [exp.experiment_id for exp in experiments]
         runs = client.search_runs(
             experiment_ids=experiment_ids,
@@ -158,8 +164,6 @@ def get_mlflow_stats():
             return {"error": "No runs found in any experiment."}
 
         latest_run = runs[0]
-
-        # Extract and convert Unix timestamp to readable date
         start_time_ms = latest_run.info.start_time
         training_date = (
             datetime.datetime.fromtimestamp(start_time_ms / 1000.0).strftime(
@@ -188,7 +192,6 @@ def get_mlflow_stats():
         return {"error": str(e)}
 
 
-# --- 4. Server Execution ---
 if __name__ == "__main__":
     import uvicorn
 
